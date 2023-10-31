@@ -1,3 +1,14 @@
+`timescale 1ns/1ps
+
+`include "sequence_item.sv"
+`include "sequence.sv"
+`include "driver.sv"
+`include "monitor.sv"
+`include "scoreboard.sv"
+`include "agente.sv"
+`include "ambiente.sv"
+`include "test.sv"
+
 module tb;  
   reg clk;
 
