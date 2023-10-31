@@ -3,49 +3,58 @@ class my_test extend uvm_test;
     `uvm_components_utils (my_test)
   
     function new (string name = "my_test", uvm_componet parent = null);
-        super.new (name, parent)
+        super.new (name, parent);
     endfunction
 
-    my_env m_top_env;
-    my_cfg my_cfg0;
+    env e0;
+    bit[`LENGTH-1:0] pattern = 4'b1011;
+    get_item_seq seq;
+    virtual des_if vif;
 
-    virtual function void (uvm_phase phase);
+
+    virtual function void build_phase (uvm_phase phase);
         super.build_phase (phase);
 
-        m_top_env = my_env::type_id::create ("m_top_env", this);
-        my_cfg0 = my_cfg::type_id::create ("m_cfg0", this);
+        e0 = env::type_id::create ("e0", this);
+        
 
-        set_cfg_params ();
-
-        uvm_config_db #(my_cfg) :: set (this, "m_top_env.my_agent", "m_cfg0", m_cfg0);
+        if (!uvm_config_db #(virtual des_if)::set(this, "", "des_vif",vif))
+            `uvm_fatal("TEST","Did not get vif");
+        uvm_config_db #(virtual des_if)::set(this, "e0.a0.*","des_vif",vif);
+        uvm_config_db #(bit [`LENGTH-1:0])::set(this,"*","ref_pattern",pattern);
+        seq = gen_item_seq::type_id::create("seq");
+        seq.randomize();
     endfunction
 
-    virtual function void set_cfg_params ();
-
-        if (! uvm_componet #(virtual dut_if) :: get (this, "", "dut_if", m_cfg0.vif))begin
-            `uvm_error (get_type_name (), "DUT Interface not found !")
-        end
-
-        m_cfg0.m_verbosity = UVM_HIGH;
-        m_cfg0.active = UVM_ACTIVE;
-    endfunction
-
-    function void end_of_simulation_phase (uvm_phase phase);
-        uvm_top.print_topology ();    
-    endfunction
-
-    function void start_of_simulation_phase (uvm_phase phase);
-        super.start_of_simulation_phase (phase);
-        uvm_config_db#(uvm_object_wrapper)::set(this, "m_top_env.my_agent.m_seqr0.main_phase","default_sequence", base_sequence::type_id::get());
-    endfunction
-    
     virtual task run_phase (uvm_phase phase);
-        my_seq m_seq = my_seq::type_id::create ("m_seq");
-
-        super.run_phase(phase);
-        phase.raise_objection (this);
-        m_seq.start (m_env.seqr);
-        phase.drop_objection (this);
+        phase.raise_objection(this);
+        apply_reset();
+        seq.start(e0.a0.s0);
+        #200;
+        phase.drop_objection(this);
     endtask
+
+    virtual task apply_reset();
+        vif.rstn <= 0;
+        vif.in <= 0;
+        repeat(5) @ (posedge vif.clk);
+        vif.rstn <= 1;
+        repeat(10) @ (posedge vif.clk);
+    endtask
+endclass
+
+ class test_1011 extends base_test;
+
+    `uvm_component_utils(test_1011);
+    function new (string name = "test_1011", uvm_component parent = null);
+        super.new(name,parent);
+    endfunction  
+
+
+    virtual function void build_phase(uvm_phase phase);
+        pattern = 4'b1011;
+        super.build_phase(phase);
+        seq.randomize() with {num inside {[300:500]};};
+    endfunction    
 
 endclass
