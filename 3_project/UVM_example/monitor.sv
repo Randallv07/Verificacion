@@ -1,21 +1,33 @@
-class my_monitor extends uvm_monitor;
-    `uvm_component_utils (my_monitor)
+class monitor extends uvm_monitor;
+    `uvm_component_utils (monitor)
 
-    virtual dut_if vif;
-    bit eneable_check = 1;
-
-    uvm_analysis_port #(my_data) mon_analysis_port;
-
-    function new (string name, uvm_component parent = null);
+    function new (string name = "mointor", uvm_component parent = null);
         super.new(name, parent);
     endfunction
+
+    uvm_analysis_port #(Item) mon_analysis_port;
+    virtual des_if vif;
 
     virtual function void build_phase (uvm_phase phase);
         super.build_phase (phase);
 
-        mon_analysis_port = new ("mon_analysis_port", this);
-        if (! uvm_config_db #(virtual dut_if):: get (this, "","vif", vif)) begin
-            `uvm_error (get_type_name(), "DUT interface not found")
+        if (! uvm_config_db #(virtual des_if):: get (this, "","des_if", vif)) begin
+            `uvm_fatal ("MON", "Could no get vif")
         end
+        mon_analysis_port = new ("mon_analysis_port", this);
     endfunction
+
+    virtual task run_phase(uvm_phase phase);
+        super.run_phase(phase);
+        forever begin
+            @ (vif.cb);
+                if (vif.rstn) begin
+                    Item item = Item::type_id::create("item");
+                    item.in = vif.in;
+                    item.out = vif.cb.out;
+                    mon_analysis_port.write(item);
+                    `uvm_info("MON", $sformatf("Saw item %s", item,convert2str()), UVM_HIGH);
+                end
+        end
+    endtask
 endclass
