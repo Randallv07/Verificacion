@@ -10,10 +10,10 @@ class my_driver extends uvm_driver #(Item);
     virtual  des_if  vif;
 
     virtual function void build_phase(uvm_phase phase);
-    super.bulid_phase(phase);
+        super.bulid_phase(phase);
 
-    if (!uvm_config_db #(virtual des_if) ::get(this, "","des_vif",vif))
-        `uvm_fatal("DRV","No pudo obtenerse vif")
+        if (!uvm_config_db #(virtual des_if) ::get(this, "","des_vif",vif))
+            `uvm_fatal("DRV","No pudo obtenerse vif")
     endfunction
     
     virtual task run_phase(uvm_phase phase);
@@ -28,7 +28,7 @@ class my_driver extends uvm_driver #(Item);
     endtask  
 
     virtual task drive_item(Item m_item);
-    @(vif.cb);
-    vif.cb.in <= m_item.in;
+        @(vif.cb);
+        vif.cb.in <= m_item.in;
     endtask
 endclass

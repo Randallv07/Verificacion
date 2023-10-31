@@ -7,13 +7,12 @@ class Item extends uvm_sequence_item; // 1) Clase Item hereda atributos de uvm_s
 
 
     virtual function string convert2str();
-    return $sformatf("in = %0d, out = %0d", in,out);
-
+        return $sformatf("in = %0d, out = %0d", in,out);
     endfunction
 
 
     function new (string name = "Item");
-    super.new(name); // Llama al constructor del padre (uvm_sequence_item) 
+        super.new(name); // Llama al constructor del padre (uvm_sequence_item) 
     endfunction
 
     constraint c1 {in dist {0:/20, 1:/80};} // El peso de 0 es de 20, mientras que el peso de 1 es de 80
