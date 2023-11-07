@@ -14,6 +14,8 @@ class my_env extends uvm_env
         super.build_phase(phase);
         my_agent=agent::type_id::create("my_agent", this);
         my_scoreboard=scoreboard::type_id::create("my_scoreboard", this);
+    endfunction
+
     virtual function void connect_phase (uvm_phase phase);
         //super.connect_phase(phase)
         my_agent.my_monitor.item_collected_port.connect(my_scoreboard.data_export);

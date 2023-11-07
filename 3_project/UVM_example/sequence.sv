@@ -10,21 +10,21 @@ class gen_item_seq extends uvm_sequence;
 
     rand int num; 
 
-    constraint c1 { soft num inside ([10:50]); }
+  constraint c1 { soft num inside {[10:50]}; }
 
     virtual task body();
 
         for (int i = 0; i < num; i++) begin
 
-        Item m_item Item::type_id::create("w_item");
+          Item m_item = Item::type_id::create("m_item");
 
         start_item(m_item);
 
         m_item.randomize();
 
-        uvm_info("SEQ", $sformatf("Generate new item: %s", m_item.convert2str()), UVM_HIGH)
+          uvm_info("SEQ", $sformatf("Generate new item: %s", m_item.convert2str()), UVM_HIGH);
 
-        finish item(m_item);
+        finish_item(m_item);
 
         end
 
