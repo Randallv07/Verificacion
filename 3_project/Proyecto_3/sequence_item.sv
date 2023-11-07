@@ -9,20 +9,6 @@
 // Sequence Item: En este se realizan las transacciones que seran enviadas al DUT //
 ////////////////////////////////////////////////////////////////////////////////////
 
-rand bit [pckg_sz-26:0] dato;
-randc bit [3:0] c_fila;
-randc bit [3:0] c_columna;
-rand bit modo;
-bit modo_selec;
-rand int fuente;
-bit [3:0] destino;
-bit [7:0] Next_jump;
-int tiempo;
-int variabilidad;
-rand int retardo;
-int retardo_max;
-int fuente_aux;
-
 class item extends uvm_sequence_item;
     `uvm_object_utils(item); // Registro en la fabrica
 
@@ -45,12 +31,19 @@ class item extends uvm_sequence_item;
     int retardo_max;
     int fuente_aux;
 
+    //salida
+    bit  [pckg_sz-1:0] salida;  // Fila de fuente
+
 
     virtual function string print_transaccion(); // Imprime la transacción
-        return $sformatf("Fila_d=%0h, Columna_d=%0h, Modo=%0d, Fila_f=%0d, Columna_F=%0d, Pyld=%0d",
+        return $sformatf("Envio: Fila_d=%0h, Columna_d=%0h, Modo=%0d, Fila_f=%0d, Columna_F=%0d, Pyld=%0d",
         d_fila, d_columna, modo, f_fila, f_columna, dato);
     endfunction
 
+    virtual function string print_salida(); // Imprime la transacción
+        return $sformatf("Recibido: Fila_d=%0h, Columna_d=%0h, Modo=%0d, Fila_f=%0d, Columna_F=%0d, Pyld=%0d",
+        salida[pckg_sz-9:pckg_sz-12], salida[pckg_sz-13:pckg_sz-16], salida[pckg_sz-17], salida[pckg_sz-18:pckg_sz-21], salida[pckg_sz-22:pckg_sz-26], salida[pckg_sz-27:0]); //[id_mntr] -> lo necesito?
+    endfunction
 
     // *************************************Constraints*************************************
 
