@@ -1,5 +1,6 @@
 class driver extends uvm_driver #(item);
 `uvm_component_utils(driver)
+parameter int  pckg_sz = 40;
 
 //Constructor 
 function new(string name = "driver", uvm_phase parent = null);
@@ -47,8 +48,6 @@ endfunction
 
 endtask
 
-
-
 //Llamando a la interfaz de del DUT
 
 virtual bus_mesh_if  vif;
@@ -64,7 +63,8 @@ virtual task run_phase(uvm_phase phase);
     super.run_phase(phase);
 
 //Declarando la instancia de la FIFO
-    fifo_in fifo_in_inst;
+    this.Fin_push(dato);
+    this.Interfaz();
 
 forever begin
     item s_item;
