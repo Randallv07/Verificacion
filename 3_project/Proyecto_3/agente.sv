@@ -20,13 +20,13 @@ class agent extends uvm_agent;
 		// Generando instancias de los drivers
 		for (int i = 0; i < drvrs ; i++) begin
     		string name = $sformatf("drv%d", i);
-    		driver drv_inst = driver::type_id::create(name, null);
+    		drv_inst = driver::type_id::create(name, null);
 		end
 
 		//Generando instancias de los monitores
 		for (int j = 0; j < drvrs; j++) begin
 			string name2 = $sformatf("mnt%d", j);
-    		monitor mnt_inst = monitor::type_id::create(name2, null);
+    		mnt_inst = monitor::type_id::create(name2, null);
 		end
 
 
