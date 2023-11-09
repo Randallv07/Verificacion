@@ -23,6 +23,7 @@ class item extends uvm_sequence_item;
     rand bit modo; // Modo
     bit  [3:0] f_fila;  // Fila de fuente
     bit  [3:0] f_columna;  // Columna de fuente
+    bit [7:0] Next_jump;
 
     //Otros
     int tiempo;
