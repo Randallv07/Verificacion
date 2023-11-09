@@ -1,20 +1,30 @@
 class driver extends uvm_driver #(item);
 `uvm_component_utils(driver)
-parameter int  pckg_sz = 40;
 
-//Constructor 
-function new(string name = "driver", uvm_phase parent = null);
+
+function new(string name = "driver", uvm_phase parent = null); //Constructor 
     super.new(name,parent);
 endfunction 
 
     bit [pckg_sz-1:0] FIFO_IN[$]; //Queue llamada FIFO_IN
-    int id_fifo;
+    int id_fifo; 
+
+    int parameter ROWS = 4;
+    int parameter COLUMS = 4;
+    int parameter pckg_sz = 40;
+    int parameter fifo_depth = 4;
+
+    //Instancia de la interfaz virtual
+    virtual bus_mesh_if #(.ROWS(ROWS), .COLUMS(COLUMS), .pckg_sz(pckg_sz),.fifo_depth(fifo_depth)) vif;
+
+
+    //Instancia de bus mesh_generator
+    router_bus_gnrtr #(.rows(ROWS), .columns(COLUMS), .pck_sz(pckg_sz), .fifo_depth(fifo_depth)) router_inst;
 
     function new (int ID); //id_fifo identifica el numero de fifo correspondiente a la instancia
 	    FIFO_IN = {}; //Inicializa la Queue vacia 
 	    this.id_fifo = ID; //Asigna un numero a la variable id_fifo, segun el numero de iteraciones que se haga en el testbench		
     endfunction
-
 
     function Fin_push(bit [pckg_sz-1:0] dato); // Push de la FIFO in
 		this.FIFO_IN.push_back(dato);
@@ -37,7 +47,7 @@ endfunction
 	  if(this.FIFO_IN.size>0) begin this.FIFO_IN.delete(0);
 	
 	  //assersion fifo in
-		assert(this.vif.popin[this.id_fifo])begin // ve si el dut esta haciendo popin para capturar dato.
+    assert(this.vif.popin[this.id_fifo])begin // ve si el dut esta haciendo popin para capturar dato.
 		  //$display("[PASS] DUT captura datos##########################################################################################################################3");
 		end
 		else begin
@@ -51,6 +61,9 @@ endtask
 //Llamando a la interfaz de del DUT
 
 virtual bus_mesh_if  vif;
+
+// Instancia de sequence item
+item item_inst;
 
 virtual function void  build_phase(uvm_phase phase); //Se conecta el bus_mesh_if con vif para la interfaz virtual.
     super.build_phase(phase);
@@ -72,29 +85,25 @@ forever begin
     seq_item_port.get_next_item(s_item);
     driver_item(s_item);
     seq_item_port.item_done(s_item);
-
-    //Realizar operaciones con la FIFO
-    /*fifo_inst.Fin_push();
-
-    fork
-        fifo_inst.interfaz();
-    join_none */
+end
+    
+endtask
 
 
-
-   /* virtual task driver_item(s_item)
+    virtual task driver_item(s_item)
     @(posedge vif.clk);
     begin
 
-        vif.pndng <= 
-        vif.data_out <=
-        vif.popin <=
-        vif.pop <=
-        vif.data_out_i_in <=
-        vif.pndng_i_in <=
-        vif.reset <= */ 
+        this.vif.pndng <= router_inst.pndng;
+        this.vif.data_out <= router_inst.data_out;
+        this.vif.popin <= router_inst.popin;
+        this.vif.pop <= router_inst.pop;
+        this.vif.data_out_i_in <= { this.item_inst.dato, this.item_inst.d_fila, this.item_inst.d_columna, this.item_inst.modo};
+        this.vif.pndng_i_in <= router_inst.pndng_i_in;
+        this.vif.reset <= router_inst.reset; 
+    end
 
-end
+
 endtask 
 
 endclass

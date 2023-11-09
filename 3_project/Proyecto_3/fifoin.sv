@@ -25,26 +25,25 @@ function new (int ID); //id_fifo identifica el numero de fifo correspondiente a 
 endfunction
 
 
-function Fin_push(bit [pckg_sz-1:0] dato); // Push de la FIFO in
-		this.FIFO_IN.push_back(dato);
-		this.vif.data_out_i_in[this.id_fifo] = FIFO_IN[0];
-		this.vif.pndng_i_in[this.id_fifo] = 1;
+function Fin_push(bit [pckg_sz-1:0] dato); // Hace el push hacia adentro de la fifo_in
+		this.FIFO_IN.push_back(dato); //Agrega el dato al final de la cola 
+		this.vif.data_out_i_in[this.id_fifo] = FIFO_IN[0]; //Envia el dato de la posicion 0 del queue al decodificador del bus
+		this.vif.pndng_i_in[this.id_fifo] = 1; //Levanta el pending para indicar que debe leer el dato_out_i_in que va a ingresar a una terminal correspondiente definida por id_fifo
 endfunction
 
 task interfaz();
-	//$display("FIFO #%d: ingresa dato al bus",this.id_fifo);
 	  this.vif.pndng_i_in[this.id_fifo] = 0;
 	forever begin
-		if(this.FIFO_IN.size==0) begin 
-			this.vif.pndng_i_in[this.id_fifo] = 0;
-			this.vif.data_out_i_in[this.id_fifo] = 0;
+		if(this.FIFO_IN.size==0) begin  //Si el tamaño de la queue es 0 
+			this.vif.pndng_i_in[this.id_fifo] = 0; // Asigna el pending de entrada a 0 porque no hay nada que enviar en la queue
+			this.vif.data_out_i_in[this.id_fifo] = 0; //Asigna el contenido de data_out_i_in a 0 porque no hay nada que enviar en la queue
 		end
-		else begin
-			this.vif.pndng_i_in[this.id_fifo] = 1;
-			this.vif.data_out_i_in[this.id_fifo] = FIFO_IN[0];
+		else begin //Si el tamaño de la queue es diferente de 0
+			this.vif.pndng_i_in[this.id_fifo] = 1; //Se asigna el pending de entrada en 1 porque si hay datos que enviar de la queue
+			this.vif.data_out_i_in[this.id_fifo] = FIFO_IN[0]; //Asigna el contenido de data_out_i_in al valor de la  posicion 0 de la queue
 		end
-		  @(posedge this.vif.popin[this.id_fifo]);
-	  if(this.FIFO_IN.size>0) begin this.FIFO_IN.delete(0);
+		  @(posedge this.vif.popin[this.id_fifo]); // Como el dato ya está almacenado en data_out_i_in de una respectiva terminal si el tamaño de fifo_in es mayor a cero,
+	  if(this.FIFO_IN.size>0) begin this.FIFO_IN.delete(0); //Entonces se elimina la posicion de la queue porque ya este dato fue enviado a una terminal
 	
 	  //assersion fifo in
 		assert(this.vif.popin[this.id_fifo])begin // ve si el dut esta haciendo popin para capturar dato.
@@ -58,3 +57,5 @@ task interfaz();
 
 endtask
 endclass
+
+
