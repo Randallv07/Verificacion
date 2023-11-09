@@ -12,7 +12,7 @@ class agent extends uvm_agent;
 
 	driver	      	 	    drv_inst;	// Instancia del driver
 	monitor 	            mnt_inst;	// Instancia del monitor
-	uvm_sequencer #(item)   sequencer_inst //Instancia del sequencer
+	uvm_sequencer #(item)   seq_inst //Instancia del sequencer
 	
 	virtual function void build_phase(uvm_phase phase);
 		super.build_phase(phase);
