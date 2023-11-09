@@ -13,7 +13,7 @@ class test extends uvm_test;
 
     virtual function void build_phase(uvm_phase phase);
         super.build_phase(phase);
-        amb_inst = environment::type_id::create("amb_inst",this);
+        amb_inst = ambiente::type_id::create("amb_inst",this);
 
         //Verifica si se conecto correctamente al interface
         if(!uvm_config_db#(virtual bus_mesh_if)::get(this,"","bus_mesh_if",vif))
@@ -21,8 +21,8 @@ class test extends uvm_test;
         uvm_config_db#(virtual bus_mesh_if)::set(this,"amb_inst.agn_inst.*","bus_mesh_if",vif);
         
         //Genera la secuencia 
-        seq = seq_default::type_id::create("seq");
-        seq.randomize() with {num inside{[30:40]};};
+        seq = my_sequence::type_id::create("seq");
+        seq.randomize() with {trans_num inside{[30:40]};};
     endfunction
 
     virtual task run_phase(uvm_phase phase);
@@ -44,7 +44,7 @@ class test_debug extends test;
 
     virtual function void build_phase(uvm_phase phase);
         super.build_phase(phase);
-        seq.randomize() with {num inside{[10:20]};};
+        seq.randomize() with {trans_num inside{[10:20]};};
     endfunction
 
     virtual task run_phase(uvm_phase phase);

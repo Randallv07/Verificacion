@@ -93,5 +93,3 @@ class Driver #(parameter ROWS = 4, parameter COLUMS = 4, parameter pckg_sz = 40,
 
 	endtask
 endclass
-	
-
