@@ -17,13 +17,14 @@ class item extends uvm_sequence_item;
     endfunction
 
     // Trasacción {Nextjump, d_fila, d_columna, modo, f_fila, f_columna, dato}
-    rand bit  [pckg_sz-26:0] dato;  // Payload
+    bit [7:0] Next_jump;
     rand bit  [3:0] d_fila;  // Fila de destino
     rand bit  [3:0] d_columna;  // Columna de destino
     rand bit modo; // Modo
     bit  [3:0] f_fila;  // Fila de fuente
     bit  [3:0] f_columna;  // Columna de fuente
-    bit [7:0] Next_jump;
+    rand bit  [pckg_sz-26:0] dato;  // Payload
+    s_item = {this.Next_jump, this.d_fila, this.d_columna,this.modo, this.f_fila, this.f_columna, this.dato};
 
     //Otros
     int tiempo;

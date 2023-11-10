@@ -10,8 +10,8 @@ class agent extends uvm_agent;
 		super.new(name,parent);
 	endfunction
 
-	driver	      	 	    drv_inst;	// Instancia del driver
-	monitor 	            mnt_inst;	// Instancia del monitor
+	driver	      	 	    drv_inst [15:0];	// Instancia del driver
+	monitor 	            mnt_inst [15:0];	// Instancia del monitor
 	uvm_sequencer #(item)   seq_inst //Instancia del sequencer
 	
 	virtual function void build_phase(uvm_phase phase);
@@ -20,13 +20,13 @@ class agent extends uvm_agent;
 		// Generando instancias de los drivers
 		for (int i = 0; i < drvrs ; i++) begin
     		string name = $sformatf("drv%d", i);
-    		drv_inst = driver::type_id::create(name, null);
+    		driver drv_inst[i] = driver::type_id::create(name, null);
 		end
 
 		//Generando instancias de los monitores
 		for (int j = 0; j < drvrs; j++) begin
 			string name2 = $sformatf("mnt%d", j);
-    		mnt_inst = monitor::type_id::create(name2, null);
+    		mnt_inst[j] = monitor::type_id::create(name2, null);
 		end
 
 
