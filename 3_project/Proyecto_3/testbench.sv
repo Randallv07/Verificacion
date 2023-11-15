@@ -1,31 +1,27 @@
 `include "uvm_macros.svh"
 import uvm_pkg::*;
+import test::*;
 `include "Router_library.sv"
 `include "interface.sv"
 `include "sequence_item.sv"
 `include "sequence.sv"
-`include "monitor.sv"
 `include "Driver.sv"
-//`include "scoreboard.sv"
+`include "monitor.sv"
+`include "scoreboard.sv"
 `include "agente.sv"
 `include "ambiente.sv"
 `include "test.sv"
 
 module tb;	
-	//import "DPI-C" context function int report();
-	reg clk;
-	always #10 clk =~ clk;
-	bus_mesh_if _vif(clk);
 
-    //Defincion de parametros
-	parameter ROWS_tb = 4;
-	parameter COLUMS_tb = 4;
-	parameter pckg_sz_tb = 40;
-	parameter fifo_depth_tb = 8;
-	parameter c_fila_tb = 0;
-  	parameter broadcast ={pckg_sz_tb-18{1'b1}};
-	parameter c_columna_tb = 0;
-	parameter drvrs_tb = ROWS_tb*2+COLUMS_tb*2;
+	bit clk_tb;
+
+	always #5 clk_tb= ~clk_tb;
+	bus_mesh_if _vif(clk_tb);
+
+	dut_wrapper dut_wrapper(.)
+
+
 	
     //Se genera dumpfile para ver señales
 	initial begin
