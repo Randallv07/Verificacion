@@ -48,9 +48,9 @@ class test_debug extends test;
 
     virtual function void build_phase(uvm_phase phase);
         super.build_phase(phase);
-      seq.randomize() with {trans_num inside{[1:4]};};
+      seq.randomize() with {trans_num inside{[1:2]};};
     endfunction
-
+/*
     virtual task run_phase(uvm_phase phase);
         phase.raise_objection(this);
       for (int i=0; i<16 ; i++ ) begin
@@ -58,6 +58,27 @@ class test_debug extends test;
       		seq.start(amb_inst.agent_inst.seq_inst[a]);
       	end
         phase.drop_objection(this);
+    endtask*/
+  
+    virtual task run_phase(uvm_phase phase);
+     // forever begin
+        phase.raise_objection(this);
+
+      for (int i = 0; i < seq.trans_num; i++) begin
+            automatic int a;
+            a = $urandom_range(0, 15);
+
+            // Iniciar la transacción
+            seq.start(amb_inst.agent_inst.seq_inst[a]);
+
+            // Esperar un tiempo entre transacciones
+          #20;
+        end
+
+        phase.drop_objection(this);
+      //end
     endtask
+
+
 endclass
 
