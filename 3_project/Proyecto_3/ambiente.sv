@@ -5,8 +5,8 @@ class ambiente extends uvm_env;
         super.new(name, parent);
     endfunction
 
-  	agent agent_inst;
-    scoreboard scoreboard_inst;
+  	agent#(item) agent_inst;
+    scoreboard#(item) scoreboard_inst;
 
 	//////////////////////////////////////////////////////////////////
     virtual function void build_phase (uvm_phase phase);
@@ -20,6 +20,7 @@ class ambiente extends uvm_env;
       for (int i=0; i<16 ; i++ ) begin
       		automatic int a=i;
       		agent_inst.mnt_inst[a].mon_analysis_port.connect(scoreboard_inst.m_analysis_imp);
+        	agent_inst.drv_inst[a].drv_analysis_port.connect(scoreboard_inst.d_analysis_imp);
       end
     endfunction
     

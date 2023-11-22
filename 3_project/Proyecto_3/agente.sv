@@ -9,8 +9,8 @@ class agent extends uvm_agent;
   parameter int COLUMS = 4;
   parameter int pckg_sz = 40;
 
-  	driver	      	 	    drv_inst[15:0];	// Instancia del driver
-	monitor 	            mnt_inst[15:0];	// Instancia del monitor
+  	driver#(item)	      	 	    drv_inst[15:0];	// Instancia del driver
+	monitor#(item) 	            mnt_inst[15:0];	// Instancia del monitor
   	uvm_sequencer #(item)   seq_inst[15:0]; //Instancia del sequencer
   
   ////////////////////////////////////////////////////////////////////////////
@@ -21,7 +21,7 @@ class agent extends uvm_agent;
       		automatic int a=i;
       		drv_inst[a] = driver::type_id::create($sformatf("drv_inst%0d",a),this);  
           	mnt_inst[a] = monitor::type_id::create($sformatf("mnt_inst%0d",a),this);  
-          	seq_inst[a] = uvm_sequencer#(item)::type_id::create($sformatf("seq_inst%0d",a), this);
+          seq_inst[a] = uvm_sequencer#(item)::type_id::create($sformatf("seq_inst%0d",a), this);
     	end
       	
         for (int i = 0; i<COLUMS;i++)begin 
@@ -52,16 +52,5 @@ class agent extends uvm_agent;
           drv_inst[a].seq_item_port.connect(seq_inst[a].seq_item_export);
         end
 	endfunction
-  /*
-   task run_phase (uvm_phase phase);
-    phase.raise_objection(this);
-    begin
-      my_sequence trans;
-      trans = my_sequence::type_id::create("trans");
-      repeat(1) begin
-       trans.start(seq_inst);
-      end
-    end
-    phase.drop_objection(this);
-  endtask*/
+
 endclass

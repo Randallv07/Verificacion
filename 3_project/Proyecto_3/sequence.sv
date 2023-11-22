@@ -1,4 +1,3 @@
-`include "uvm_macros.svh"
 class my_sequence extends uvm_sequence;
 
     `uvm_object_utils(my_sequence)
@@ -18,6 +17,15 @@ class my_sequence extends uvm_sequence;
   
     function void build_phase(uvm_phase phase);
 
+    endfunction
+
+    virtual task body();
+      
+      	for (int i = 0; i<ROWS*2+COLUMS*2; i++) begin
+                automatic int k = i;
+                pos_driver[k] = new();
+        end
+      
     	for (int i = 0; i<COLUMS;i++)begin 
           pos_driver[i].fila = 0;              
         	pos_driver[i].column = i+1; 
@@ -34,15 +42,10 @@ class my_sequence extends uvm_sequence;
             pos_driver[i+COLUMS*3].column = COLUMS+1; 
           pos_driver[i+COLUMS*3].fila = i+1; 
         end 
-        /*foreach (pos_driver[i]) begin
-            $display("POS %d ROW=%0d COL=%0d",i,pos_driver[i].row,pos_driver[i].column);
-        */
       
-    endfunction
-
-    virtual task body();
         for (int i = 0; i < trans_num; i++) begin 
             item s_item = item::type_id::create("s_item");
+          	s_item.pos_driver = pos_driver;
             //Transacciones validas
             s_item.Existe_fuente.constraint_mode(1);
             s_item.Existe_direccion.constraint_mode(1);
@@ -57,13 +60,16 @@ class my_sequence extends uvm_sequence;
           //s_item.Fuente_estatica.constraint_mode(1);
             start_item(s_item);
           	
-            s_item.randomize();
+            s_item.randomize() with {d_fila != f_fila; d_columna != f_columna;};
+          
+          //m_trans.randomize() with { row != terminales[seqdrvSource]/10; colum != terminales[seqdrvSource]%10;};
             //`uvm_info("Sequenciador",$sformatf("Se genera nuevo item", s_item.print_transaccion()), UVM_HIGH);
             finish_item(s_item);
         end 
-        //`uvm_info("Sequenciador",$sformatf("El numero de transacciones es  %0d", trans_num), UVM_LOW);
+        //`uvm_info("Sequenciador",$sformatf("El numero de transacciones es  %0d", trans_num), UVM_MEDIUM);
     endtask
 endclass
+
 
 
 class MODE0 extends uvm_sequence;
@@ -211,6 +217,7 @@ class UNO_A_TODOS extends uvm_sequence;
       //fuente estatica
       s_item.Fuente_estatica.constraint_mode(1);
       s_item.Destino_estatico.constraint_mode(0);
+      s_item.variabilidad_dato.constraint_mode(0);
       start_item(s_item);   	
       s_item.randomize();
       finish_item(s_item);
@@ -249,6 +256,7 @@ class TODOS_A_UNO extends uvm_sequence;
       //fuente estatica
       s_item.Fuente_estatica.constraint_mode(0);
       s_item.Destino_estatico.constraint_mode(1);
+      s_item.variabilidad_dato.constraint_mode(0);
       start_item(s_item);   	
       s_item.randomize();
       finish_item(s_item);
@@ -286,6 +294,7 @@ class DESTINO_INVALIDO extends uvm_sequence;
       //fuente estatica
       s_item.Fuente_estatica.constraint_mode(0);
       s_item.Destino_estatico.constraint_mode(0);
+      s_item.variabilidad_dato.constraint_mode(0);
       start_item(s_item);   	
       s_item.randomize();
       finish_item(s_item);
@@ -293,11 +302,3 @@ class DESTINO_INVALIDO extends uvm_sequence;
   endtask
 endclass
 
-
-
-    
-  
-  
-  
-  
-  

@@ -30,13 +30,11 @@ module tb;
 	
   
     //Se genera dumpfile para ver señales
-	//initial begin
-		//$dumpfile("test.vcd");
-		//$dumpvars(0,tb);
-	//end
-  
+	initial begin
+		$dumpfile("test.vcd");
+		$dumpvars(0,tb);
+	end
 
- 
 	mesh_gnrtr #(.ROWS(ROWS_tb), .COLUMS(COLUMS_tb), .pckg_sz(pckg_sz_tb),.fifo_depth(fifo_depth_tb), .bdcst(broadcast)) DUT (
   		.clk(clk),
   		.reset(vif.reset),
@@ -48,11 +46,10 @@ module tb;
   		.pndng_i_in(vif.pndng_i_in));
 
 	initial begin
-      clk <= 0;
+		clk <= 0;
 		uvm_config_db#(virtual bus_mesh_if)::set(null,"uvm_test_top","bus_mesh_if",vif);
-      
-      
-      run_test("test_MODE0");
+      run_test("test_RETARDO");
+      	#1000;
 	end
 	
 endmodule

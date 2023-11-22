@@ -1,8 +1,11 @@
 class test extends uvm_test;
-  `uvm_component_utils(test); // Register at the factory
-  function new(string name = "test", uvm_component parent=null); // Builder
-    super.new(name,parent);
-  endfunction
+    `uvm_component_utils(test); // Register at the factory
+  
+
+
+    function new(string name = "test", uvm_component parent=null); // Builder
+        super.new(name,parent);
+    endfunction
 
     ambiente amb_inst;
     my_sequence	seq;
@@ -12,14 +15,12 @@ class test extends uvm_test;
   	UNO_A_TODOS UNO_A_TODOS_test;
   	TODOS_A_UNO TODOS_A_UNO_test;
   	DESTINO_INVALIDO DESTINO_INVALIDO_test;
- 
-  	
+
     virtual bus_mesh_if  vif;
 ////////////////////////////////////////////////////////////////////////////////////////////////
     virtual function void build_phase(uvm_phase phase);
         super.build_phase(phase);
         amb_inst = ambiente::type_id::create("amb_inst",this);
-
         //Verifica si se conecto correctamente al interface
         if(!uvm_config_db#(virtual bus_mesh_if)::get(this,"","bus_mesh_if",vif))
             `uvm_fatal("Test","Could not get vif")
@@ -31,18 +32,15 @@ class test extends uvm_test;
       	RETARDO_test = MODE_RETARDO::type_id::create("RETARDO_test");
       	UNO_A_TODOS_test = UNO_A_TODOS::type_id::create("UNO_A_TODOS_test"); 
       	TODOS_A_UNO_test = TODOS_A_UNO::type_id::create("TODOS_A_UNO_test");
-      DESTINO_INVALIDO_test = DESTINO_INVALIDO::type_id::create("DESTINO_INVALIDO_test"); 
+      	DESTINO_INVALIDO_test = DESTINO_INVALIDO::type_id::create("DESTINO_INVALIDO_test");
       	seq.randomize() with {trans_num inside{[1:2]};};
-      //amb_inst.agent_inst.set_report_verbosity_level( UVM_MEDIUM );
     endfunction
 ////////////////////////////////////////////////////////////////////////////////////////////////
     virtual task run_phase(uvm_phase phase);
         //report();
         phase.raise_objection(this);
       for (int i=0; i<16 ; i++ ) begin
-      		automatic int a=i;
-        //Iniciar las diferentes secuencias con las instancias de las clases
-        
+      	automatic int a=i;
         seq.start(amb_inst.agent_inst.seq_inst[a]);
         MODE0_test.start(amb_inst.agent_inst.seq_inst[a]);
         MODE1_test.start(amb_inst.agent_inst.seq_inst[a]);
@@ -79,10 +77,9 @@ class test_debug extends test;
     endtask*/
   
     virtual task run_phase(uvm_phase phase);
-     // forever begin
         phase.raise_objection(this);
 
-      for (int i = 0; i < 15; i++) begin 
+      for (int i = 0; i < 15; i++) begin
             automatic int a;
             a = $urandom_range(0, 15);
 
@@ -92,12 +89,12 @@ class test_debug extends test;
             // Esperar un tiempo entre transacciones
           #20;
         end
-		#1000;
-    	$finish;
+		#10000;
+      	$finish;
         phase.drop_objection(this);
+      //end
     endtask
 endclass
-
 
 class test_MODE0 extends test;
   `uvm_component_utils(test_MODE0); // Register at the factory
@@ -273,6 +270,4 @@ class test_DESTINO_INVALIDO extends test;
 endclass
 
 
-
-  
 

@@ -24,36 +24,42 @@ class item extends uvm_sequence_item;
     super.new(name);
   endfunction
 
-    // Trasacción {Nextjump, d_fila, d_columna, modo, f_fila, f_columna, dato}
+  // drvs 
   rand bit  [pckg_sz-26:0] dato;  // Payload
    	rand bit modo; // Modo
   bit [7:0] Next_jump = 8'b11111111;
     rand bit  [3:0] d_fila;  // Fila de destino
     rand bit  [3:0] d_columna;  // Columna de destino
-    //bit  [3:0] f_fila;  // Fila de fuente
-    //bit  [3:0] f_columna;  // Columna de fuente
     rand int fuente;
-  bit  [pckg_sz-1:0] out;
-  mapeo pos_driver [COLUMS*2+ROWS*2];
+  	mapeo pos_driver [COLUMS*2+ROWS*2];
     
-    //Otros
+    //sequences
     int tiempo;
     int variabilidad;
+    rand int retardo;
     int retardo_max=50;
-    int fuente_aux=1;
-  	rand int retardo;
+    int fuente_aux=5;
+  
+    //mnt
+    bit  [pckg_sz-1:0] out;  // Fila de fuente
+  
+    //scoreboard
+    bit [3:0] f_columna;  // Columna de fuente
+    bit [3:0] f_fila;  // Fila de fuente
+    int trayectoria [5][5];
+  	bit listo = 0;
+  	int salto = 0;
+  bit [pckg_sz-1:0] paquete;  // Columna de fuente
+  
 
-    //salida
-    bit  [pckg_sz-1:0] salida;  // Fila de fuente
 
 
     virtual function string print_transaccion(); // Imprime la transacción
-      return $sformatf("Envio: Fila_d=%0h, Columna_d=%0h, Modo=%0d, Pyld=%0d", d_fila, d_columna, modo, dato);
+      return $sformatf("Fuente: [%0d][%0d], envia el mensaje: %0h al driver destino [%0d][%0d], en modo %0d", f_fila, f_columna, dato, d_fila, d_columna, modo);
     endfunction
 
     virtual function string print_salida(); // Imprime la transacción
-        return $sformatf("Recibido: Fila_d=%0h, Columna_d=%0h, Modo=%0d, Fila_f=%0d, Columna_F=%0d, Pyld=%0d",
-        salida[pckg_sz-9:pckg_sz-12], salida[pckg_sz-13:pckg_sz-16], salida[pckg_sz-17], salida[pckg_sz-18:pckg_sz-21], salida[pckg_sz-22:pckg_sz-26], salida[pckg_sz-27:0]); //[id_mntr] -> lo necesito?
+      return $sformatf("Destino: [%0d][%0d] recibe dato: %0h de drvr fuente [%0d][%0d] en modo %0b", out[pckg_sz-9:pckg_sz-12],out[pckg_sz-13:pckg_sz-16],out[pckg_sz-26:0],out[pckg_sz-18:pckg_sz-21],out[pckg_sz-22:pckg_sz-25],out[pckg_sz-17]);
     endfunction
 
     // *************************************Constraints*************************************
@@ -63,6 +69,7 @@ class item extends uvm_sequence_item;
     constraint MODO_0 {modo == 0;};
     //Fuente
     constraint Existe_fuente {fuente >= 0; fuente < 2*ROWS+2*COLUMS;}; 
+  //constraint send_self {d_fila != f_fila; d_columna != f_columna;};
     //constraint send_self {d_fila != pos_driver[fuente].fila; d_columna != pos_driver[fuente].column;};
   	//constraint send_self{d_fila == pos_driver[fuente].fila; d_columna == pos_driver[fuente].column;};
   //constraint misma_fila_columna {d_fila != pos_driver[fuente].fila; d_columna != pos_driver[fuente].column;};
@@ -85,7 +92,6 @@ class item extends uvm_sequence_item;
 	
     //Fuente estatica
     constraint Fuente_estatica {fuente == fuente_aux;};
-  
   
   	//Destino estatico
   constraint Destino_estatico {d_fila ==4; d_columna ==5;};
