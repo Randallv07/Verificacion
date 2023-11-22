@@ -6,7 +6,6 @@
 // Modulo: Sequence_item
 
 class mapeo;
-<<<<<<< HEAD
 int fila;
 int column;
 =======
@@ -20,7 +19,6 @@ endclass
 ////////////////////////////////////////////////////////////////////////////////////
 
 class item extends uvm_sequence_item;
-<<<<<<< HEAD
 `uvm_object_utils(item); // Registro en la fabrica
 parameter int ROWS = 4;
 parameter int COLUMS = 4;
@@ -87,7 +85,6 @@ constraint direccion_valida_drvs {
 };
 //Datos
 //constraint variabilidad_dato {dato inside {{(pckg_sz-25){2'b10}},{(pckg_sz-25){2'b01}},{(pckg_sz-25){1'b1}},{(pckg_sz-25){1'b0}}};};// Variabilidad maxima
-=======
   `uvm_object_utils(item); // Registro en la fabrica
   parameter int ROWS = 4;
   parameter int COLUMS = 4;
@@ -134,18 +131,15 @@ constraint direccion_valida_drvs {
     virtual function string print_salida(); // Imprime la transacción
       return $sformatf("Destino: [%0d][%0d] recibe dato: %0h de drvr fuente [%0d][%0d] en modo %0b", out[pckg_sz-9:pckg_sz-12],out[pckg_sz-13:pckg_sz-16],out[pckg_sz-26:0],out[pckg_sz-18:pckg_sz-21],out[pckg_sz-22:pckg_sz-25],out[pckg_sz-17]);
     endfunction
->>>>>>> Emanuel
+
 
 //Fuente estatica
 //constraint Fuente_estatica {fuente == fuente_aux;};
 
-<<<<<<< HEAD
+
 //Retardo
 constraint retardo_aleat{retardo<=retardo_max;retardo>0;};
 constraint retardo_0{retardo == 0;};
-
-
-=======
     //Modo
     constraint MODO_1 {modo == 1;};
     constraint MODO_0 {modo == 0;};
@@ -182,8 +176,6 @@ constraint retardo_0{retardo == 0;};
     constraint retardo_aleat{retardo<=retardo_max;retardo>0;};
     constraint retardo_0{retardo == 0;};
   
-
->>>>>>> Emanuel
 
 endclass
 
