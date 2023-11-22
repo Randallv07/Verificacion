@@ -9,15 +9,12 @@ class test extends uvm_test;
 
     ambiente amb_inst;
     my_sequence	seq;
-<<<<<<< HEAD
-=======
   	MODE0 MODE0_test;
 	MODE1 MODE1_test;
   	MODE_RETARDO RETARDO_test;
   	UNO_A_TODOS UNO_A_TODOS_test;
   	TODOS_A_UNO TODOS_A_UNO_test;
   	DESTINO_INVALIDO DESTINO_INVALIDO_test;
->>>>>>> Emanuel
 
     virtual bus_mesh_if  vif;
 ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -30,10 +27,6 @@ class test extends uvm_test;
             uvm_config_db#(virtual bus_mesh_if)::set(this,"amb_inst.agent.*","bus_mesh_if",vif);
         //Genera la secuencia 
         seq = my_sequence::type_id::create("seq");
-<<<<<<< HEAD
-      seq.randomize() with {trans_num inside{[1:2]};};
-      //amb_inst.agent_inst.set_report_verbosity_level( UVM_MEDIUM );
-=======
       	MODE0_test = MODE0::type_id::create("MODE0_test");
       	MODE1_test = MODE1::type_id::create("MODE1_test");
       	RETARDO_test = MODE_RETARDO::type_id::create("RETARDO_test");
@@ -41,17 +34,12 @@ class test extends uvm_test;
       	TODOS_A_UNO_test = TODOS_A_UNO::type_id::create("TODOS_A_UNO_test");
       	DESTINO_INVALIDO_test = DESTINO_INVALIDO::type_id::create("DESTINO_INVALIDO_test");
       	seq.randomize() with {trans_num inside{[1:2]};};
->>>>>>> Emanuel
     endfunction
 ////////////////////////////////////////////////////////////////////////////////////////////////
     virtual task run_phase(uvm_phase phase);
         //report();
         phase.raise_objection(this);
       for (int i=0; i<16 ; i++ ) begin
-<<<<<<< HEAD
-      		automatic int a=i;
-        seq.start(amb_inst.agent_inst.seq_inst[a]);
-=======
       	automatic int a=i;
         seq.start(amb_inst.agent_inst.seq_inst[a]);
         MODE0_test.start(amb_inst.agent_inst.seq_inst[a]);
@@ -60,7 +48,6 @@ class test extends uvm_test;
         UNO_A_TODOS_test.start(amb_inst.agent_inst.seq_inst[a]);
         TODOS_A_UNO_test.start(amb_inst.agent_inst.seq_inst[a]);
         DESTINO_INVALIDO_test.start(amb_inst.agent_inst.seq_inst[a]);
->>>>>>> Emanuel
       end
         phase.drop_objection(this);
     endtask
@@ -73,8 +60,6 @@ class test_debug extends test;
     function new(string name = "test_debug", uvm_component parent=null); // Builder
         super.new(name,parent);
     endfunction
-<<<<<<< HEAD
-=======
 
 
     virtual function void build_phase(uvm_phase phase);
@@ -284,42 +269,5 @@ class test_DESTINO_INVALIDO extends test;
   endtask
 endclass
 
->>>>>>> Emanuel
 
-
-    virtual function void build_phase(uvm_phase phase);
-        super.build_phase(phase);
-      seq.randomize() with {trans_num inside{[1:2]};};
-    endfunction
-/*
-    virtual task run_phase(uvm_phase phase);
-        phase.raise_objection(this);
-      for (int i=0; i<16 ; i++ ) begin
-        automatic int a=i;
-      		seq.start(amb_inst.agent_inst.seq_inst[a]);
-      	end
-        phase.drop_objection(this);
-    endtask*/
-  
-    virtual task run_phase(uvm_phase phase);
-     // forever begin
-        phase.raise_objection(this);
-
-      for (int i = 0; i < seq.trans_num; i++) begin
-            automatic int a;
-            a = $urandom_range(0, 15);
-
-            // Iniciar la transacción
-            seq.start(amb_inst.agent_inst.seq_inst[a]);
-
-            // Esperar un tiempo entre transacciones
-          #20;
-        end
-
-        phase.drop_objection(this);
-      //end
-    endtask
-
-
-endclass
 

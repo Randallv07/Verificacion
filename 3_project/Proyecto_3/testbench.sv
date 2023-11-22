@@ -4,17 +4,10 @@ import uvm_pkg::*;
 `include "Router_library.sv"
 `include "interface.sv"
 `include "sequence_item.sv"
-<<<<<<< HEAD
-//`include "sequence.sv"
-`include "monitor.sv"
-`include "Driver.sv"
-//`include "scoreboard.sv"
-=======
 `include "sequence.sv"
 `include "monitor.sv"
 `include "Driver.sv"
 `include "scoreboard.sv"
->>>>>>> Emanuel
 `include "agente.sv"
 `include "ambiente.sv"
 `include "test.sv"
@@ -55,12 +48,8 @@ module tb;
 	initial begin
 		clk <= 0;
 		uvm_config_db#(virtual bus_mesh_if)::set(null,"uvm_test_top","bus_mesh_if",vif);
-<<<<<<< HEAD
-		run_test("test_debug");
-=======
       run_test("test_RETARDO");
       	#1000;
->>>>>>> Emanuel
 	end
 	
 endmodule

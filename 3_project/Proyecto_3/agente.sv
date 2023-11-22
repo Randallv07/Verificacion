@@ -9,13 +9,8 @@ class agent extends uvm_agent;
   parameter int COLUMS = 4;
   parameter int pckg_sz = 40;
 
-<<<<<<< HEAD
-  	driver	      	 	    drv_inst[15:0];	// Instancia del driver
-	monitor 	            mnt_inst[15:0];	// Instancia del monitor
-=======
   	driver#(item)	      	 	    drv_inst[15:0];	// Instancia del driver
 	monitor#(item) 	            mnt_inst[15:0];	// Instancia del monitor
->>>>>>> Emanuel
   	uvm_sequencer #(item)   seq_inst[15:0]; //Instancia del sequencer
   
   ////////////////////////////////////////////////////////////////////////////
@@ -57,20 +52,5 @@ class agent extends uvm_agent;
           drv_inst[a].seq_item_port.connect(seq_inst[a].seq_item_export);
         end
 	endfunction
-<<<<<<< HEAD
-  /*
-   task run_phase (uvm_phase phase);
-    phase.raise_objection(this);
-    begin
-      my_sequence trans;
-      trans = my_sequence::type_id::create("trans");
-      repeat(1) begin
-       trans.start(seq_inst);
-      end
-    end
-    phase.drop_objection(this);
-  endtask*/
-=======
 
->>>>>>> Emanuel
 endclass
