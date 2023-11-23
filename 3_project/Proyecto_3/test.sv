@@ -79,7 +79,7 @@ class test_debug extends test;
     virtual task run_phase(uvm_phase phase);
         phase.raise_objection(this);
 
-      for (int i = 0; i < 15; i++) begin
+      for (int i = 0; i < 100; i++) begin
             automatic int a;
             a = $urandom_range(0, 15);
 
@@ -110,7 +110,7 @@ class test_MODE0 extends test;
   virtual task run_phase(uvm_phase phase);
     phase.raise_objection(this);
     `uvm_warning("ALERTA","INICIA TEST EN MODO 0");
-    for (int i = 0; i < 15; i++) begin
+    for (int i = 0; i < 100; i++) begin
       automatic int a;
       a = $urandom_range(0, 15);
       // Iniciar la transacción
@@ -140,7 +140,7 @@ class test_MODE1 extends test;
   virtual task run_phase(uvm_phase phase);
     phase.raise_objection(this);
     `uvm_warning("ALERTA","INICIA TEST EN MODO 1");
-    for (int i = 0; i < 15; i++) begin
+    for (int i = 0; i < 100; i++) begin
       automatic int a;
       a = $urandom_range(0, 15);
       // Iniciar la transacción
@@ -149,7 +149,7 @@ class test_MODE1 extends test;
       #20;
     end
     #1000;
-    $finish;
+    //$finish;
 	phase.drop_objection(this);
   endtask
 endclass
@@ -168,7 +168,7 @@ class test_RETARDO extends test;
   virtual task run_phase(uvm_phase phase);
     phase.raise_objection(this);
     `uvm_warning("ALERTA","INICIA TEST EN MODO RETARDO");
-    for (int i = 0; i < 15; i++) begin
+    for (int i = 0; i < 100; i++) begin
       automatic int a;
       a = $urandom_range(0, 15);
       // Iniciar la transacción
@@ -196,7 +196,7 @@ class test_UNO_A_TODOS extends test;
   virtual task run_phase(uvm_phase phase);
     phase.raise_objection(this);
     `uvm_warning("ALERTA","INICIA TEST EN MODO UNO_A_TODOS");
-    for (int i = 0; i < 15; i++) begin
+    for (int i = 0; i < 100; i++) begin
       automatic int a;
       a = 5;
       // Iniciar la transacción
@@ -225,7 +225,7 @@ class test_TODOS_A_UNO extends test;
   virtual task run_phase(uvm_phase phase);
     phase.raise_objection(this);
     `uvm_warning("ALERTA","INICIA TEST EN MODO TODOS_A_UNO");
-    for (int i = 0; i < 15; i++) begin
+    for (int i = 0; i < 100; i++) begin
       automatic int a;
       a = $urandom_range(0, 15);
       // Iniciar la transacción
@@ -255,7 +255,7 @@ class test_DESTINO_INVALIDO extends test;
   virtual task run_phase(uvm_phase phase);
     phase.raise_objection(this);
     `uvm_warning("ALERTA","INICIA TEST EN MODO DESTINO INVALIDO");
-    for (int i = 0; i < 15; i++) begin
+    for (int i = 0; i < 100; i++) begin
       automatic int a;
       a = $urandom_range(0, 15);
       // Iniciar la transacción

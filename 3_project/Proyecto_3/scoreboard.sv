@@ -1,6 +1,8 @@
 `uvm_analysis_imp_decl(_p_drvr)
 `uvm_analysis_imp_decl(_p_mntr)
 
+`include "debug_signal_detector.sv"
+
 class scoreboard extends uvm_scoreboard #(item);
   `uvm_component_utils(scoreboard)
   parameter ROWS = 4;
@@ -31,8 +33,9 @@ class scoreboard extends uvm_scoreboard #(item);
   task run_phase(uvm_phase phase);
     super.run_phase(phase);
      phase.raise_objection(this);
-    //write_p_drvr(s_item);
-    //write_p_mntr(s_item);
+    /*fork
+      `trayectoria
+    join_none*/
     `uvm_warning("Se inicializó el scoreboard", get_type_name())
      phase.drop_objection(this);
     
@@ -42,12 +45,20 @@ class scoreboard extends uvm_scoreboard #(item);
 	//paquete = {s_item.Next_jump, s_item.d_fila, s_item.d_columna, s_item.modo, s_item.f_fila, s_item.f_columna, s_item.dato};
     //arreglo_sc.push_back(s_item);
     arreglo_sc[{s_item.paquete}] = s_item;
+    golden_reference(s_item);
+    /*
+    foreach (arreglo_sc[i]) begin
+      $display("Arreglo driver: %h",arreglo_sc[i].dato);
+    end*/
     
   endfunction
   
   function write_p_mntr(input item s_item);
     arreglo_mnt[{s_item.paquete}] = s_item;
    
+        /*foreach (arreglo_mnt[i]) begin
+          $display("Arreglo monitor: %h",arreglo_mnt[i].out[pckg_sz-26:0]);
+    end*/
     /*foreach (arreglo_sc[i]) begin
       $display("------%h",arreglo_sc[i].dato);
       $display("xxxxxx%h",arreglo_mnt[i].out[pckg_sz-26:0]);
@@ -64,7 +75,7 @@ class scoreboard extends uvm_scoreboard #(item);
   endfunction
 
     virtual function void check_phase(uvm_phase phase);
-      super.check_phase(phase);;
+      super.check_phase(phase);
       
 	  $display("Cantidad de datos iniciales [%0d]",arreglo_mnt.size());
       foreach(arreglo_mnt[i])begin
@@ -75,7 +86,7 @@ class scoreboard extends uvm_scoreboard #(item);
         $display("El dato [%b] no llegó al destino", i);
       end
     endfunction
-  /*
+  
   task golden_reference(item s_item);
      r = s_item.f_fila;
       c = s_item.f_columna;
@@ -144,7 +155,6 @@ class scoreboard extends uvm_scoreboard #(item);
                end
           	end
           	else begin
-              $display("ORI: [%0d] [%0d] DIR: [%0d] [%0d]",s_item.f_fila,s_item.f_columna, s_item.d_fila, s_item.d_columna);
               rr = r;
               cc = c;
               while((cc > s_item.d_columna)&(cc>1))begin
@@ -155,7 +165,6 @@ class scoreboard extends uvm_scoreboard #(item);
                 cc--;
                 s_item.trayectoria[rr][cc] = 1;
                end
-              $display("REF RR %0d f_fila %0d",rr,s_item.d_fila);
               while((rr > s_item.d_fila)&(rr>=1))begin
                 s_item.trayectoria[rr][cc] = 1;
                 s_item.listo = 1;
@@ -167,119 +176,99 @@ class scoreboard extends uvm_scoreboard #(item);
           end
         end
         1:begin
-          //$display("ORI: [%0d] [%0d] DIR: [%0d] [%0d]",s_item.f_fila,s_item.f_columna, s_item.d_fila, s_item.d_columna);
           if(((s_item.f_fila <=s_item.d_fila))&(s_item.listo !=1)) begin
             if((s_item.f_columna <= s_item.d_columna)&(s_item.listo !=1))begin
-              //$display("ORI: [%0d] [%0d] DIR: [%0d] [%0d]",s_item.f_fila,s_item.f_columna, s_item.d_fila, s_item.d_columna);
               rr = r;
               cc = c;
               while((rr< s_item.d_fila)&(rr<=3))begin
-                //$display("Valores de R %0d C %0d",rr,cc);
                 s_item.trayectoria[rr][cc] = 1;
                 s_item.listo = 1;
                 s_item.salto =s_item.salto +1;
                 rr++;
                 s_item.trayectoria[rr][cc] = 1;
-                //$display("Valores de R %0d C %0d",rr,cc);
               end
               while((cc< s_item.d_columna)&(cc<=3))begin
-                //$display("Valores de R %0d C %0d",rr,cc);
                 s_item.listo = 1;
                 s_item.salto =s_item.salto +1;
                 s_item.trayectoria[rr][cc] = 1;
                 cc++;
                 s_item.trayectoria[rr][cc] = 1;
-                //$display("Valores de R %0d C %0d",rr,cc);
                end
           	end
           	else begin
               rr = r;
               cc = c;
-              //$display("ORI: [%0d] [%0d] DIR: [%0d] [%0d]",s_item.f_fila,s_item.f_columna, s_item.d_fila, s_item.d_columna);
               while((rr< s_item.d_fila)&(rr<=3))begin
-                //$display("Valores de R %0d C %0d",rr,cc);
                 s_item.trayectoria[rr][cc] = 1;
                 s_item.listo = 1;
                 s_item.salto =s_item.salto +1;
                 s_item.trayectoria[rr][cc] = 1;
                 rr++;
                 s_item.trayectoria[rr][cc] = 1;
-                //$display("REF RR %0d f_fila %0d",rr,s_item.d_fila);
                end
-                //$display("REF RR %0d f_fila %0d",rr,s_item.d_fila);
               while(cc > s_item.d_columna)begin
-                //$display("Valores de R %0d C %0d",rr,cc);
                 s_item.trayectoria[rr][cc] = 1;
                 s_item.listo = 1;
                 s_item.salto =s_item.salto +1;
                 s_item.trayectoria[rr][cc] = 1;
                 cc--;
                 s_item.trayectoria[rr][cc] = 1;
-                //$display("Valores de R %0d C %0d",rr,cc);
               end
             end
           end
           
           if(((s_item.f_fila >= s_item.d_fila))&(s_item.listo !=1)) begin
             if((s_item.f_columna <= s_item.d_columna)&(s_item.listo !=1))begin
-              //$display("ORI: [%0d] [%0d] DIR: [%0d] [%0d]",s_item.f_fila,s_item.f_columna, s_item.d_fila, s_item.d_columna);
               rr = r;
               cc = c;
               while((rr> s_item.d_fila)&(rr>=2))begin
-                //$display("Valores de R %0d C %0d",rr,cc);
                 s_item.listo = 1;
                 s_item.trayectoria[rr][cc] = 1;
                 s_item.salto =s_item.salto +1;
                 rr--;
                 s_item.trayectoria[rr][cc] = 1;
-                //$display("Valores de R %0d C %0d",rr,cc);
                end
               while((cc< s_item.d_columna)&(cc<=3))begin
-                //$display("Valores de R %0d C %0d",rr,cc);
                 s_item.trayectoria[rr][cc] = 1;
                 s_item.listo = 1;
                 s_item.salto =s_item.salto +1;
                 s_item.trayectoria[rr][cc] = 1;
                 cc++;
                 s_item.trayectoria[rr][cc] = 1;
-                //$display("Valores de R %0d C %0d",rr,cc);
               end
           	end
           	else begin
               rr = r;
               cc = c;
               while((rr > s_item.d_fila)&(rr>1))begin
-                //$display("Valores de R %0d C %0d",rr,cc);
                 s_item.trayectoria[rr][cc] = 1;
                 s_item.listo = 1;
                 s_item.salto =s_item.salto +1;
                 s_item.trayectoria[rr][cc] = 1;
                 rr--;
                 s_item.trayectoria[rr][cc] = 1;
-                //$display("Valores de R %0d C %0d",rr,cc);
                end
               while((cc > s_item.d_columna)&(cc>=1))begin
-                //$display("Valores de R %0d C %0d",rr,cc);
                 s_item.trayectoria[rr][cc] = 1;
                 s_item.listo = 1;
                 s_item.salto =s_item.salto +1;
                 s_item.trayectoria[rr][cc] = 1;
                 cc--;
                 s_item.trayectoria[rr][cc] = 1;
-                //$display("Valores de R %0d C %0d",rr,cc);
               end
             end
           end
         end
     endcase
-    
-    /*$display("Ruta scoreboard");
+    /*
+    $display("Ruta scoreboard: fuente: [%0d][%0d], destino: [%0d][%0d] en modo: %d",s_item.f_fila,s_item.f_columna, s_item.d_fila, s_item.d_columna, s_item.modo);
+    $display("saltos: ", s_item.salto);
     for (int i = 0; i <=5 ; i++)begin
       for (int j = 0; j <= 5; j++) begin
         if(s_item.trayectoria[i][j]==1)$display("ruta [%0d][%0d]",i,j);
       end
     end*/
-  //endtask
+  endtask
 
   
   /*virtual function void report();
@@ -289,4 +278,3 @@ class scoreboard extends uvm_scoreboard #(item);
   
 
 endclass
-

@@ -7,16 +7,19 @@ import uvm_pkg::*;
 `include "sequence.sv"
 `include "monitor.sv"
 `include "Driver.sv"
+//`include "wrapper.sv"
 `include "scoreboard.sv"
 `include "agente.sv"
 `include "ambiente.sv"
 `include "test.sv"
+`include "coverage.sv"
 
-module tb;	
+module testbench;	
 	//import "DPI-C" context function int report();
 	reg clk;
 	always #10 clk =~ clk;
 	bus_mesh_if vif(clk);
+  //dut_wrapper dut_wrap (.vif(vif));
 
     //Defincion de parametros
 	parameter ROWS_tb = 4;
@@ -27,12 +30,14 @@ module tb;
   	parameter broadcast ={pckg_sz_tb-18{1'b1}};
 	parameter c_columna_tb = 0;
 	parameter drvrs_tb = ROWS_tb*2+COLUMS_tb*2;
+  
+  	coverage coverage_tb;
 	
   
     //Se genera dumpfile para ver señales
 	initial begin
 		$dumpfile("test.vcd");
-		$dumpvars(0,tb);
+		$dumpvars(0,testbench);
 	end
 
 	mesh_gnrtr #(.ROWS(ROWS_tb), .COLUMS(COLUMS_tb), .pckg_sz(pckg_sz_tb),.fifo_depth(fifo_depth_tb), .bdcst(broadcast)) DUT (
@@ -48,8 +53,17 @@ module tb;
 	initial begin
 		clk <= 0;
 		uvm_config_db#(virtual bus_mesh_if)::set(null,"uvm_test_top","bus_mesh_if",vif);
-      run_test("test_RETARDO");
-      	#1000;
+      
+      run_test("test_debug");
+      //run_test("test_MODE0");
+      //run_test("test_MODE1");
+      //run_test("test_RETARDO");
+      //run_test("test_UNO_A_TODOS");
+      //run_test("test_TODOS_A_UNO");
+      //run_test("test_DESTINO_INVALIDO");
+        #10000;
+      
+      coverage_tb.run();
 	end
 	
 endmodule

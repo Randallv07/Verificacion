@@ -49,6 +49,7 @@ class my_sequence extends uvm_sequence;
             //Transacciones validas
             s_item.Existe_fuente.constraint_mode(1);
             s_item.Existe_direccion.constraint_mode(1);
+          s_item.variabilidad_dato.constraint_mode(0);
             //s_item.send_self.constraint_mode(1);
             //Modo
             s_item.MODO_1.constraint_mode(0);
