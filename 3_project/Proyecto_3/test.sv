@@ -1,9 +1,24 @@
+// test
+// Instituto Tecnologico de Costa Rica (www.tec.ac.cr)
+// Escuela de Ingeniería Electrónica
+// Prof: Ing. Ronny Garcia Ramirez. (rgarcia@tec.ac.cr)
+// Estudiantes: -Enmanuel Araya Esquivel. (emanuelarayaesq@gmail.com)
+//              -Randall Vargas Chaves. (randallv07@gmail.com)
+// Curso: EL-5511 Verificación funcional de circuitos integrados
+// Este Script esta estructurado en System Verilog
+// Propósito General: Diseño de pruebas en capas para un BUS mesh de datos
+// Modulo: Define test y cantidad de tenasacciones.
+
+////////////////////////////////////////////////////////////////////////////////////
+// test: Este bloque se encarga de generar las transacciones que se van a enviar. //
+////////////////////////////////////////////////////////////////////////////////////
+
 class test extends uvm_test;
-    `uvm_component_utils(test); // Register at the factory
+    `uvm_component_utils(test); // Registro en la fabrica
   
 
 
-    function new(string name = "test", uvm_component parent=null); // Builder
+    function new(string name = "test", uvm_component parent=null); // constructor
         super.new(name,parent);
     endfunction
 
@@ -55,7 +70,7 @@ endclass
 
     // One specific test, used for test values and debug
 class test_debug extends test;
-    `uvm_component_utils(test_debug); // Register at the factory
+    `uvm_component_utils(test_debug); // Registro en la fabrica
 
     function new(string name = "test_debug", uvm_component parent=null); // Builder
         super.new(name,parent);
@@ -97,7 +112,7 @@ class test_debug extends test;
 endclass
 
 class test_MODE0 extends test;
-  `uvm_component_utils(test_MODE0); // Register at the factory
+  `uvm_component_utils(test_MODE0); // Registro en la fabrica
   function new(string name = "test_MODE0", uvm_component parent=null); // Builder
     super.new(name,parent);
   endfunction
@@ -127,7 +142,7 @@ endclass
 
 
 class test_MODE1 extends test;
-  `uvm_component_utils(test_MODE1); // Register at the factory
+  `uvm_component_utils(test_MODE1); //  Registro en la fabrica
   function new(string name = "test_MODE1", uvm_component parent=null); // Builder
     super.new(name,parent);
   endfunction
@@ -155,7 +170,7 @@ class test_MODE1 extends test;
 endclass
 
 class test_RETARDO extends test;
-  `uvm_component_utils(test_RETARDO); // Register at the factory
+  `uvm_component_utils(test_RETARDO); //  Registro en la fabrica
   function new(string name = "test_RETARDO", uvm_component parent=null); // Builder
     super.new(name,parent);
   endfunction
@@ -183,7 +198,7 @@ class test_RETARDO extends test;
 endclass
 
 class test_UNO_A_TODOS extends test;
-  `uvm_component_utils(test_UNO_A_TODOS); // Register at the factory
+  `uvm_component_utils(test_UNO_A_TODOS); //  Registro en la fabrica
   function new(string name = "test_UNO_A_TODOS", uvm_component parent=null); // Builder
     super.new(name,parent);
   endfunction
@@ -212,7 +227,7 @@ endclass
 
 
 class test_TODOS_A_UNO extends test;
-  `uvm_component_utils(test_TODOS_A_UNO); // Register at the factory
+  `uvm_component_utils(test_TODOS_A_UNO); // Registro en la fabrica
   function new(string name = "test_TODOS_A_UNO", uvm_component parent=null); // Builder
     super.new(name,parent);
   endfunction
@@ -242,7 +257,7 @@ endclass
 
 
 class test_DESTINO_INVALIDO extends test;
-  `uvm_component_utils(test_DESTINO_INVALIDO); // Register at the factory
+  `uvm_component_utils(test_DESTINO_INVALIDO); // Registro en la fabrica
   function new(string name = "test_DESTINO_INVALIDO", uvm_component parent=null); // Builder
     super.new(name,parent);
   endfunction

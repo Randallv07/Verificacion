@@ -1,7 +1,22 @@
+// Driver
+// Instituto Tecnologico de Costa Rica (www.tec.ac.cr)
+// Escuela de Ingeniería Electrónica
+// Prof: Ing. Ronny Garcia Ramirez. (rgarcia@tec.ac.cr)
+// Estudiantes: -Enmanuel Araya Esquivel. (emanuelarayaesq@gmail.com)
+//              -Randall Vargas Chaves. (randallv07@gmail.com)
+// Curso: EL-5511 Verificación funcional de circuitos integrados
+// Este Script esta estructurado en SystemVerilog
+// Propósito General: Diseño de pruebas en capas para un BUS de datos
+// Modulo: infraestructura necesarias para crear, ejecutar y analizar pruebas
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+// Driver: este módulo es el encargado de forzar señales de entrada hacia el dispositivo bajo prueba //
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //`uvm_analysis_port_decl(_p_drvr)
 class driver extends uvm_driver #(item);
   
-`uvm_component_utils(driver)
+`uvm_component_utils(driver) // Registro en la fabrica
 
 function new(string name = "driver", uvm_component parent = null); //Constructor 
   super.new(name, parent);
@@ -42,7 +57,7 @@ uvm_analysis_port #(item) drv_analysis_port; // Puntero para el analisis de puer
       vif.reset = 0;
       
       forever begin
-        //`uvm_info("DRV", $formatf("Esperando por item de secuencia"), UVM_HIGH);
+        // Pasa la transacción al DUT
         item s_item = item::type_id::create("s_item");
         seq_item_port.get_next_item(s_item);
         @(posedge vif.clk);
@@ -57,39 +72,31 @@ uvm_analysis_port #(item) drv_analysis_port; // Puntero para el analisis de puer
           vif.pndng_i_in[id_driver] = 1;
         @(posedge vif.clk);
           wait (vif.popin[id_driver]);
-        /////////////////////////////////
             vif.pndng_i_in[id_driver] = 0;
             while (espera < s_item.retardo)begin
           @(posedge vif.clk);
             espera = espera +1;
             end
-        ////////////////////////////////
-          //vif.pndng_i_in[id_driver] = 0;
           seq_item_port.item_done();
-        //`uvm_info("DRV", $sformatf("Driver #%0d: %s", id_driver, s_item.print_transaccion()), UVM_MEDIUM);
-        //$display("El driver #%0d fuente: [%0d][%0d], envia el mensaje: %0h al driver destino [%0d][%0d], en modo %0d", id_driver, f_fila, f_columna, s_item.dato, s_item.d_fila, s_item.d_columna, s_item.modo);
-        //$display("El driver #%0d envia a fila: %0d, columna: %0d ", id_driver, s_item.d_fila, s_item.d_columna);
-        //$display("El driver #%0d envia a next_jmp: %0d, %0d", id_driver, f_fila, f_columna);
-        //$display("El driver #%0d tiene fila: [%b], columna: [%b]", f_fila, f_columna);
         `uvm_info("DRIVER", $sformatf("El driver #[%0d] envía desde la fuente [%0d][%0d] el mensaje: %h hacia el destino [%0d][%0d] en modo [%d], con un valor de retardo [%0d]", id_driver, f_fila, f_columna, vif.data_out_i_in[id_driver][pckg_sz-25:0], s_item.d_fila, s_item.d_columna, s_item.modo, s_item.retardo), UVM_LOW);
         
         assert(vif.popin[id_driver])begin // ve si el dut esta haciendo popin para capturar dato.
-		  //$display("[PASS] DUT captura datos##########################################################################################################################3");
-		end
-		else begin
-		  $error("########################################################DUT no capturo datos##########################################################################################################");
-		end
+		    //$display("[PASS] DUT captura datos##########################################################################################################################3");
+      end
+      else begin
+        $error("########################################################DUT no capturo datos##########################################################################################################");
+      end
+        
+        //Espera para siguiente envio
+      @(posedge vif.clk);
+      if (count > 150) begin
+            break;
+          end
+          count++;
+      @(posedge vif.clk);
         
         
-        @(posedge vif.clk);
-        if (count > 150) begin
-              break;
-            end
-            count++;
-        @(posedge vif.clk);
-        
-        
-      end   
+    end   
   endtask 
 endclass
     

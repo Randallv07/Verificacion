@@ -1,3 +1,18 @@
+// Scoreboard
+// Instituto Tecnologico de Costa Rica (www.tec.ac.cr)
+// Escuela de Ingeniería Electrónica
+// Prof: Ing. Ronny Garcia Ramirez. (rgarcia@tec.ac.cr)
+// Estudiantes: -Enmanuel Araya Esquivel. (emanuelarayaesq@gmail.com)
+//              -Randall Vargas Chaves. (randallv07@gmail.com)
+// Curso: EL-5511 Verificación funcional de circuitos integrados
+// Este Script esta estructurado en System Verilog
+// Propósito General: Diseño de pruebas en capas para un BUS mesh de datos
+// Modulo: Ayuda a comparar las transacciones.
+
+///////////////////////////////////////////////////////////////////////////////
+// Scoreboar: Este bloque se encarga de comparar lo recibido con lo esperado //
+///////////////////////////////////////////////////////////////////////////////
+
 `uvm_analysis_imp_decl(_p_drvr)
 `uvm_analysis_imp_decl(_p_mntr)
 
