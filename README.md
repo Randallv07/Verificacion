@@ -8,7 +8,7 @@ Pasos para correr el proyecto
 bash comandos.sh y especificar el nombre de "testbench.sv" cuando se pregunte por la prueba a correr.
 
 3) Correr comando: 
-   ./salida
+./salida
 
 Para correr los porcentajes de cobertura en Verdi dentro de esa misma dirección:
 
